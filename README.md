@@ -12,6 +12,8 @@ BOT SERVER INVITE LINK: https://discord.com/api/oauth2/authorize?client_id=11233
 
 https://discord.com/api/oauth2/authorize?client_id=1123355241363030079&permissions=3072&scope=bot
 
+https://replit.com/@EeshaUlhaq1/SimplifyBot#main.py
+
 ---------------------------------------------------------------------------------------------------------------------
 ## Set up completly new bot
 python3 -m pip install requests  
