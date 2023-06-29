@@ -2,7 +2,7 @@
 
 
 # About
-A bot that sends a message when a posting is added/modified to the Simplify and PittCSC internship table.
+A Discord bot that sends a message to a given channel when a posting is added/modified to the Simplify and PittCSC internship table.
 https://github.com/pittcsc/Summer2024-Internships
 
 
