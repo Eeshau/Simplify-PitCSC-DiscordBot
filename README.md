@@ -8,9 +8,7 @@ https://github.com/pittcsc/Summer2024-Internships
 
 
 
-BOT SERVER INVITE LINK: https://discord.com/api/oauth2/authorize?client_id=1123355241363030079&permissions=343597402112&scope=bot 
-
-https://discord.com/api/oauth2/authorize?client_id=1123355241363030079&permissions=3072&scope=bot
+BOT SERVER INVITE LINK:https://discord.com/api/oauth2/authorize?client_id=1123355241363030079&permissions=3072&scope=bot
 
 https://replit.com/@EeshaUlhaq1/SimplifyBot#main.py
 
