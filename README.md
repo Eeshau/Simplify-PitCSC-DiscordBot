@@ -23,6 +23,8 @@ pip3 install python-dotenv
 
 If starting with a new bot, follow similar steps as this tutorial to get the new bot set up:
 https://www.youtube.com/watch?v=0g-Ln8Zm-jg
+  
+Keeping the bot alive on Replit https://www.youtube.com/watch?v=ddiy2WkwW1U  
 
 1. Invite the bot to a server
 2. Generate and copy the discord token in in an .env file set your token string DISCORD_TOKEN= "{DiscordBotID}"
