@@ -25,6 +25,7 @@ If starting with a new bot, follow similar steps as this tutorial to get the new
 https://www.youtube.com/watch?v=0g-Ln8Zm-jg
   
 Keeping the bot alive on Replit https://www.youtube.com/watch?v=ddiy2WkwW1U  
+https://www.youtube.com/watch?v=1qPDN_iTAEI
 
 1. Invite the bot to a server
 2. Generate and copy the discord token in in an .env file set your token string DISCORD_TOKEN= "{DiscordBotID}"
