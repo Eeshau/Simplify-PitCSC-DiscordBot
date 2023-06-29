@@ -4,26 +4,27 @@ import base64
 import discord
 from discord.ext import commands
 import os
+#from keep_alive import keep_alive
+#import nest_asyncio
+import asyncio
+#nest_asyncio.apply()
 from dotenv import load_dotenv
 load_dotenv()
 
 #---------------------------------------------------------------
-owner = "Eeshau"                    # replace with "pittcsc" 
+owner = "Eeshau"                              # replace with "pittcsc" 
 repo = "Summer2024-Internships"
 api_url = f"https://api.github.com/repos/{owner}/{repo}/readme"
-last_etag = None                    # Variable for tracking changes to the file
-last_table_rows = []                # List of last recorded internship rows
-table_rows = []                     # Latest List of internship rows 
-channel_name = "general"            # Replace "general" with the actual channel name
-
-# Load environment variables from .env file
-discord_token =  os.environ['DISCORD_TOKEN']
-
+etag = None
+last_etag = None                              # Variable for tracking changes to the file
+table_rows = []                               # Latest List of internship rows 
+last_table_rows = []                          # List of last recorded internship rows
+channel_name = "general"                      # Replace "general" with the actual channel name 
+discord_token =  os.environ['DISCORD_TOKEN']  # Load environment variables from .env file
 TOKEN = discord_token
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
-
 
 
 class ButtonsRow(discord.ui.View):
@@ -55,6 +56,43 @@ else:
 
 
 
+#---------------------------------------------------------------
+# BOT SENDS the NEW or modified table rows to the Discord "general" channel for all the servers it's in
+async def send_message_to_channel(new_rows):
+    # Create a Discord client instance
+    client = discord.Client(intents=intents)
+
+    @client.event
+    async def on_ready():
+        # Loop through every server the bot is inside of
+        for guild in client.guilds:
+            # Find the server id of the "general" channel
+            server = client.get_guild(guild.id)
+            if server:
+                channel = discord.utils.get(server.channels, name=channel_name)
+                if channel is not None:
+                    # Send the message to the channel
+                    await channel.send("**NEW or modified postings on Simplify x PitCSC Internship List**")
+                    for row in new_rows:
+                        await channel.send(f'```{str(row[1:-1])}```')
+                    # Buttons with Links
+                    view = ButtonsRow()
+                    view.add_item(discord.ui.Button(label="View Postions on Github 👀",style=discord.ButtonStyle.link,url="https://github.com/Eeshau/Summer2024-Internships/blob/dev/README.md"))
+                    view.add_item(discord.ui.Button(label="Simplify.jobs",style=discord.ButtonStyle.link,url="https://simplify.jobs"))
+                    await channel.send(view=view)
+                else:
+                    print(f"Channel with name '{channel_name}' not found in server '{server.name}'.")
+            else:
+                print("Server not found.")
+
+        # Close the client connection
+        await client.close()
+
+    # Run the client
+    await client.start(TOKEN)
+
+
+
 
 #---------------------------------------------------------------
 # GRABS CONTENTS FROM THE README FILE
@@ -82,8 +120,9 @@ def find_difference(list1, list2):
 #---------------------------------------------------------------
 # CHECKS IF CHANGES WERE MADE TO THE README FILE BASED 
 # by checking if etag hash property of the repo has changed from last_etag
-def check_readme_changes():
+async def check_readme_changes():
     global last_etag
+    global last_table_rows
 
     readme_content = get_readme_content()
     etag = readme_content.get("sha")
@@ -102,30 +141,16 @@ def check_readme_changes():
 
             # Split the table content into rows
             table_rows = table_content.strip().split("\n")[2:]
-
+            
             # Identifiy and store new or modified rows in new_rows
+            new_rows = []
             new_rows = find_difference(table_rows, last_table_rows)
             
             # DISCORD BOT SENDS the NEW or modified table rows to the channel 
-            @bot.event
-            async def on_ready():
-                print(f'Logged in as {bot.user.name}')
-                for guild in bot.guilds: #for every server the bot is do the following in each
-                    server = bot.get_guild(guild.id)
-                    if server:
-                        channel = discord.utils.get(server.channels, name=channel_name)  
-                        if channel is not None:
-                            await channel.send("**NEW or modified postings on Simplify x PitCSC Internship List**")
-                            for row in new_rows:
-                                await channel.send(f'```{str(row[1:-1])}```')
-                            # Link Buttons
-                            view = ButtonsRow()
-                            view.add_item(discord.ui.Button(label="View Postions on Github 👀",style=discord.ButtonStyle.link,url="https://github.com/Eeshau/Summer2024-Internships/blob/dev/README.md"))
-                            view.add_item(discord.ui.Button(label="Simplify.jobs",style=discord.ButtonStyle.link,url="https://simplify.jobs"))
-                            await channel.send(view=view)
-                bot.close()
-            bot.run(TOKEN)
+            await send_message_to_channel(new_rows)
 
+            # Save this table as the last /most recent table
+            last_table_rows = table_rows
         else:
             print("Table not found in the content.")
     else:
@@ -136,14 +161,11 @@ def check_readme_changes():
 #---------------------------------------------------------------
 # MONITOR FOR CHANGES EVERY 5 MINUTES
 # by setting interval delay and running check_readme_changes where the main code is
-def monitor_readme_changes(interval):
+async def monitor_readme_changes(interval):
     while True:
-        check_readme_changes()
+        await check_readme_changes()
         time.sleep(interval)
 
-monitor_readme_changes(50)
+#keep_alive()
+asyncio.run(monitor_readme_changes(25))
 #---------------------------------------------------------------
-
-
-
-
