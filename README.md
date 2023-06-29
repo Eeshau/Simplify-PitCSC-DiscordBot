@@ -14,9 +14,9 @@ https://discord.com/api/oauth2/authorize?client_id=1123355241363030079&permissio
 
 ---------------------------------------------------------------------------------------------------------------------
 ## Set Up completly new bot
-python3 -m pip install requests
-pip3 install discord
-pip3 install python-dotenv
+python3 -m pip install requests  
+pip3 install discord 
+pip3 install python-dotenv  
 
 
 If starting with a new bot follow similar steps as this tutorial to get a new bot set up:
