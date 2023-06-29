@@ -25,4 +25,4 @@ https://www.youtube.com/watch?v=0g-Ln8Zm-jg
 1. Invite the bot to a server
 2. Generate and copy the discord token in in an .env file set your token string DISCORD_TOKEN= "{DiscordBotID}"
    
-Replace *owner = "Eeshau"* with "pittcsc" or your github username if playing around with a forked repo            
+Replace *owner = "Eeshau"* with "pittcsc" or your Github username if playing around with a forked repo            
